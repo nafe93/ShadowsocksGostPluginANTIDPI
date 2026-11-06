@@ -22,7 +22,7 @@ jobs:
           java-version: '17'
           distribution: temurin
       - name: Install Android SDK packages
-        run: sdkmanager 'platforms;android-29' 'build-tools;34.0.0' 'ndk;26.2.11394342'
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-29" "build-tools;34.0.0" "ndk;26.2.11394342"'
       - name: Build debug APKs
         run: ./gradlew assembleDebug --console=plain
       - name: Test strategy generation and process lifecycle
