@@ -54,6 +54,8 @@ public class ConfigurationActivity extends com.github.shadowsocks.plugin.Configu
     private LinearLayout linearlayout_cmdargs;
     private LinearLayout linearlayout_files;
     private Spinner argumentCountSpinner;
+    private Spinner antiDPISpinner;
+    private static final String[] ANTIDPI_STRATEGIES = {"off", "aggressive", "balanced", "compat", "disorder", "fake", "oob", "tlsrec"};
     private Editable newFileNameEditable;
 
     private Toast toast;
@@ -473,6 +475,12 @@ public class ConfigurationActivity extends com.github.shadowsocks.plugin.Configu
         if (this.decodedPluginOptions == null)
             this.decodedPluginOptions = new JSONObject();
 
+        JSONObject antiDPI = new JSONObject();
+        antiDPI.put("Strategy", ANTIDPI_STRATEGIES[antiDPISpinner.getSelectedItemPosition()]);
+        antiDPI.put("TTL", 8);
+        antiDPI.put("Timeout", 3);
+        this.decodedPluginOptions.put("AntiDPI", antiDPI);
+
         // save linearlayout_cmdargs
         JSONArray allArgs = new JSONArray();
         for (Long index : cmdArgIdx) {
@@ -516,6 +524,11 @@ public class ConfigurationActivity extends com.github.shadowsocks.plugin.Configu
     }
 
     private void populateUI() throws JSONException {
+        JSONObject antiDPI = this.decodedPluginOptions.optJSONObject("AntiDPI");
+        String strategy = antiDPI == null ? "off" : antiDPI.optString("Strategy", "off");
+        for (int i = 0; i < ANTIDPI_STRATEGIES.length; i++) {
+            if (ANTIDPI_STRATEGIES[i].equals(strategy)) antiDPISpinner.setSelection(i);
+        }
         // populate linearlayout_cmdargs
         JSONArray array = this.decodedPluginOptions.getJSONArray("CmdArgs");
         for (int i = 0; i < array.length(); i++) {
@@ -588,6 +601,12 @@ public class ConfigurationActivity extends com.github.shadowsocks.plugin.Configu
         cmdArgIdx = new ArrayList<>();
 
         fileDataMap = new HashMap<>();
+
+        antiDPISpinner = findViewById(R.id.spinner_antidpi);
+        ArrayAdapter<String> antiDPIAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, ANTIDPI_STRATEGIES);
+        antiDPIAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        antiDPISpinner.setAdapter(antiDPIAdapter);
 
         argumentCountSpinner = findViewById(R.id.spinner_add_one_or_two_args);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,

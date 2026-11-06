@@ -28,4 +28,4 @@ index d3a5a42..4ea35a1 100644
  }
  
  func main() {
- 	log := xlogger.NewLogger() 
+ 	log := xlogger.NewLogger()

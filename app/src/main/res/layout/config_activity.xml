@@ -41,6 +41,19 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/antidpi_strategy" />
+                <Spinner
+                    android:id="@+id/spinner_antidpi"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:contentDescription="@string/antidpi_strategy" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/antidpi_description" />
+                <TextView
                     android:id="@+id/text_cmdargs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

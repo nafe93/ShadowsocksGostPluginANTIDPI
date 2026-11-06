@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ShadowsocksGOSTPlugin</string>
+    <string name="app_name">GOST + AntiDPI</string>
     <string name="string_text_title">GOST 插件 Shadowsocks-Android</string>
     <string name="confirm_del_arg_title">删除单个命令行参数</string>
     <string name="confirm_del_arg_msg">你确定要删除这个命令行参数吗？</string>
@@ -44,4 +44,6 @@
     <string name="cancelled">已取消</string>
     <string name="string_text_dns_server">DNS服务器</string>
     <string name="string_dns_server_desc">目前我们让GOST依靠自己来解析域名，而不是依靠系统。换句话说，系统DNS设置会被绕过（无视）。\n你可以在下面指定你想要的DNS服务器，格式为\"IP地址:端口号\"，比如\"119.29.29.29:53\"。</string>
+    <string name="antidpi_strategy">AntiDPI / ByeDPI 17.3</string>
+    <string name="antidpi_description">off: disabled. Other strategies apply to the TCP connection to your GOST server. UDP bypass is not supported. Save and reconnect after changing the strategy.</string>
 </resources>

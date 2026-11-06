@@ -1,35 +1,40 @@
-name: Android CI
+name: Android build
 
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Extract Signature
-      run: echo ${{secrets.KEY_FILE}} | base64 -d > $HOME/.android.jks
-    - name: set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
-    - name: Build with Gradle
-      run: ./gradlew assembleRelease
-      env:
-        KEY_PASS: ${{secrets.KEY_PASS}}
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3.1.1
-      with:
-        name: ShadowsocksGostPlugin.apk
-        path: app/build/outputs/apk/release/app-release.apk
-    - name: Release Build
-      uses: meeDamian/github-release@2.0
-      with:
-        token: ${{secrets.GITHUB_TOKEN}}
-        draft: true
-        gzip: false
-        files: app/build/outputs/apk/release/app-release.apk
-      if: github.event.created
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
+      - name: Install Android SDK packages
+        run: sdkmanager 'platforms;android-29' 'build-tools;34.0.0' 'ndk;26.2.11394342'
+      - name: Build debug APKs
+        run: ./gradlew assembleDebug --console=plain
+      - name: Test strategy generation and process lifecycle
+        run: |
+          make -C antidpi/vendor
+          python3 antidpi/tests/smoke.py
+          BYEDPI_TEST_ENGINE="$PWD/antidpi/vendor/ciadpi" .go_build/go/bin/go test \
+            gost/gost_helper/antidpi.go gost/gost_helper/antidpi_test.go \
+            gost/gost_helper/lifecycle_test.go
+      - name: Upload development APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: ShadowsocksGOSTAntiDPI-debug
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

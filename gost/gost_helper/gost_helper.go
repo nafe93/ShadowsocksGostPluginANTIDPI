@@ -105,6 +105,7 @@ type ConfigData struct {
 	CmdArgs [][]string
 	DataDir string
 	Files   map[string]string
+	AntiDPI AntiDPIConfig
 }
 
 var (
@@ -254,6 +255,13 @@ func PreInit() {
 		os.Args = append(os.Args, "-L")
 		os.Args = append(os.Args, fmt.Sprintf("ss+tcp://none@%s:%s", localHost, localPort))
 		os.Args = append(os.Args, strings.Split(pluginOptions, " ")...)
+	}
+
+	if configData.AntiDPI.Strategy != "" && configData.AntiDPI.Strategy != "off" && strings.TrimSpace(configData.Files[FILE_NAME_CONFIG]) != "" {
+		log.Fatal("AntiDPI requires an empty config.yaml; configure GOST with -L and -F")
+	}
+	if err := startAntiDPI(configData.AntiDPI, socketPath, VPN); err != nil {
+		log.Fatal("AntiDPI: ", err)
 	}
 
 	configFilePath := dataDir + "/" + FILE_NAME_CONFIG

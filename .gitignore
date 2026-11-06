@@ -1,17 +1,20 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/.go_build
-build/
-/captures
-.externalNativeBuild
-/.idea
-release/
-jniLibs/
+.gradle/
+.go_build/
+**/build/
+local.properties
+app/src/main/jniLibs/
+antidpi/vendor/*.o
+antidpi/vendor/ciadpi
+
+# Signing keys and credentials
+*.jks
+*.keystore
+.env
+.env.*
+!*.example
+
+# Local runtime and test artifacts
+__pycache__/
+*.pyc
+*.log
+release-artifacts/

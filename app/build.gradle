@@ -5,27 +5,42 @@ plugins {
 }
 
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+if (project.rootProject.file('local.properties').exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
 
 android {
     compileSdk 29
     namespace "com.github.shadowsocks.plugin.gost"
     defaultConfig {
-        applicationId "${android.namespace}"
+        applicationId "com.github.shadowsocks.plugin.gost.antidpi"
         minSdk 26
         //noinspection ExpiredTargetSdkVersion
         targetSdk 29
         versionCode 422000
         versionName "4.2.2"
-        manifestPlaceholders = [pluginID: "gost"]
-        setProperty("archivesBaseName", "ShadowsocksGOSTPlugin-$versionName")
+        manifestPlaceholders = [pluginID: "gost-antidpi"]
+        setProperty("archivesBaseName", "ShadowsocksGOSTAntiDPI-$versionName")
+    }
+    packagingOptions {
+        jniLibs { useLegacyPackaging true }
+    }
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            universalApk false
+        }
     }
     signingConfigs {
         releaseConfig {
             keyAlias properties.getProperty("SignKeyName")
             keyPassword properties.getProperty("SignKeyPass")
             storePassword properties.getProperty("SignKeyPass")
-            storeFile file(System.getProperty("user.home") + "/"+properties.getProperty("SignKeyStorePath"))
+            if (properties.getProperty("SignKeyStorePath")) {
+                storeFile file(System.getProperty("user.home") + "/" + properties.getProperty("SignKeyStorePath"))
+            }
         }
     }
     buildTypes {
@@ -58,7 +73,7 @@ task buildGoLibrary(type: Exec) {
     }
     environment ([ANDROID_NDK_ROOT: android.ndkDirectory])
     commandLine ('../build.gost.sh')
-    inputs.files '../build.gost.sh'
+    inputs.files '../build.gost.sh', fileTree('../gost'), fileTree('../antidpi')
     outputs.dir 'src/main/jniLibs'
 }
 

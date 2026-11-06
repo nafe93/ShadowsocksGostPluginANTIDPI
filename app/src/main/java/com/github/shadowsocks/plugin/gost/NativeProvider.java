@@ -17,13 +17,16 @@ public class NativeProvider extends NativePluginProvider {
     @NonNls
     public static final String NATIVE_PLUGIN_NAME = "libgost-plugin.so";
     @NonNls
-    public static final String NATIVE_PATH = "gost_ssand_files";
+    public static final String NATIVE_PATH = "gost-antidpi";
 
     @NotNull
     @Override
     public ParcelFileDescriptor openFile(@Nullable Uri uri) {
         try {
-            return ParcelFileDescriptor.open(new File(getExecutable()), ParcelFileDescriptor.MODE_READ_ONLY);
+            String executable = uri != null && "libbyedpi.so".equals(uri.getLastPathSegment())
+                    ? getContext().getApplicationInfo().nativeLibraryDir + "/libbyedpi.so"
+                    : getExecutable();
+            return ParcelFileDescriptor.open(new File(executable), ParcelFileDescriptor.MODE_READ_ONLY);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -38,5 +41,6 @@ public class NativeProvider extends NativePluginProvider {
     @Override
     protected void populateFiles(@NotNull PathProvider provider) {
         provider.addPath(NATIVE_PATH, 0755);
+        provider.addPath("libbyedpi.so", 0755);
     }
 }

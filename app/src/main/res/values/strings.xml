@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ShadowsocksGOSTPlugin</string>
+    <string name="app_name">GOST + AntiDPI</string>
     <string name="string_text_title">GOST plugin</string>
     <string name="string_del_arg" translatable="false">x</string>
     <string name="confirm_del_arg_title">Delete an argument</string>
@@ -55,4 +55,6 @@
     <string name="cfg_key_local_host" translatable="false">local.host</string>
     <string name="cfg_key_local_port" translatable="false">local.port</string>
     <string name="cfg_po_encoded" translatable="false">encoded</string>
+    <string name="antidpi_strategy">AntiDPI / ByeDPI 17.3</string>
+    <string name="antidpi_description">off: disabled. Other strategies apply to the TCP connection to your GOST server. UDP bypass is not supported. Save and reconnect after changing the strategy.</string>
 </resources>
